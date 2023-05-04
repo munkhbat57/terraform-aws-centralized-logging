@@ -1,6 +1,6 @@
 resource "aws_s3_bucket" "es_access_logs_bucket" {
   bucket = "access-logs-bucket-${var.domain_name}-${random_string.random.id}"
-  acl = "log-delivery-write"
+  # acl = "log-delivery-write"
 
   server_side_encryption_configuration {
     rule {
@@ -8,6 +8,14 @@ resource "aws_s3_bucket" "es_access_logs_bucket" {
             sse_algorithm = "AES256"
         }
     }
+  }
+}
+
+resource "aws_s3_bucket_ownership_controls" "es_access_logs_control" {
+  bucket = aws_s3_bucket.es_access_logs_bucket.id
+
+  rule {
+    object_ownership = "BucketOwnerPreferred"
   }
 }
 
